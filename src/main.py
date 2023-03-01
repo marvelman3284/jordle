@@ -2,7 +2,8 @@ from rich import box
 from rich.console import Console
 from rich.table import Table
 from rich import print
-from rich.prompt import Prompt 
+from rich.prompt import Prompt
+from random import choice
 
 guesses = ["", " ", " ", " ", " ", " "]
 
@@ -11,7 +12,7 @@ def get_words(file: str) -> tuple[list[str], str]:
     with open(file, "r") as f:
         words = [i.strip("\n") for i in f.readlines()]
 
-    word = "able"
+    word = choice(words)
 
     return words, word
 
@@ -86,22 +87,31 @@ def guess_ans(word: str, words: list[str]):
     for i in range(6, 0, -1):
         game(word, words, i)
 
+    print(f"You didn't guess the word, it was {word}")
+
 
 def help():
-    print("This is Jordle! You have 6 tries to guess a random word of varying length. Once you get a word the letters will change color:")
-    print("[green]Green/your terminals green color means right character, right spot[/green]")
-    print("[yellow]Yellow/your terminals yellow color means right character, wrong spot[/yellow]")
+    print(
+        "This is Jordle! You have 6 tries to guess a random word of varying length. Once you get a word the letters will change color:"
+    )
+    print(
+        "[green]Green/your terminals green color means right character, right spot[/green]"
+    )
+    print(
+        "[yellow]Yellow/your terminals yellow color means right character, wrong spot[/yellow]"
+    )
     print("[red]Red/your terminals red color means wrong character[/red]")
 
 
 def main():
-    help_input = Prompt.ask("Would you like to play or view the rules?", choices=['Play', 'Rules'])
-    if help_input == 'Play':
+    help_input = Prompt.ask(
+        "Would you like to play or view the rules?", choices=["Play", "Rules"]
+    )
+    if help_input == "Play":
         words, word = get_words("data/words.txt")
 
         setup_board(word)
         guess_ans(word, words)
-        game(word, words, 5)
 
     else:
         help()
